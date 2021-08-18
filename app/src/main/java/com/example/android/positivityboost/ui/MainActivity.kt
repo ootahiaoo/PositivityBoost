@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import com.example.android.positivityboost.model.QuoteItem
 import com.example.android.positivityboost.ui.theme.PositivityBoostTheme
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -27,9 +26,10 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainActivityScreen(viewModel: MainViewModel) {
-    val quoteItem: QuoteItem? by viewModel.quoteItem.observeAsState()
+    val quote by viewModel.quoteItem.observeAsState("")
+
     MainScreen(
-        quote = quoteItem?.affirmation,
+        quote = quote,
         onNextQuote = viewModel::getQuote
     )
 }
