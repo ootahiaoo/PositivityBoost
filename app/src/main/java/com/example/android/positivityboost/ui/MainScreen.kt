@@ -54,7 +54,6 @@ fun ContentBody(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         quote?.let {
             Text(
                 text = it,
