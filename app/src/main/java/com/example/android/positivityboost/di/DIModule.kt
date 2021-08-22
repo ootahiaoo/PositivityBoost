@@ -2,9 +2,13 @@ package com.example.android.positivityboost.di
 
 import android.app.Application
 import com.example.android.positivityboost.network.ApiClient
+import com.example.android.positivityboost.network.DogApi
 import com.example.android.positivityboost.network.QuoteApi
+import com.example.android.positivityboost.repository.DogRepository
 import com.example.android.positivityboost.repository.QuoteRepository
 import com.example.android.positivityboost.ui.MainViewModel
+import com.example.android.positivityboost.utils.DOG_RETROFIT_NAME
+import com.example.android.positivityboost.utils.DOG_URL
 import com.example.android.positivityboost.utils.QUOTE_RETROFIT_NAME
 import com.example.android.positivityboost.utils.QUOTE_URL
 import org.koin.android.ext.koin.androidContext
@@ -37,17 +41,22 @@ object DIModule {
         single(named(QUOTE_RETROFIT_NAME)) {
             (get() as ApiClient).createRetrofitBuilder().baseUrl(QUOTE_URL).build()
         }
+        single(named(DOG_RETROFIT_NAME)) {
+            (get() as ApiClient).createDogRetrofitBuilder().baseUrl(DOG_URL).build()
+        }
     }
 
     private val apiModule: Module = module {
         single { (get(named(QUOTE_RETROFIT_NAME)) as Retrofit).create(QuoteApi::class.java) }
+        single { (get(named(DOG_RETROFIT_NAME)) as Retrofit).create(DogApi::class.java) }
     }
 
     private val repositoryModule: Module = module {
         single { QuoteRepository(get()) }
+        single { DogRepository(get()) }
     }
 
     private val viewModelModule: Module = module {
-        viewModel { MainViewModel(get()) }
+        viewModel { MainViewModel(get(), get()) }
     }
 }

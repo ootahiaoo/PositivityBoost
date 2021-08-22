@@ -20,6 +20,9 @@ android {
     }
 
     buildTypes {
+        applicationVariants.all { variant ->
+            variant.buildConfigField "String", "DOG_API_KEY", getApiKey()
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -43,6 +46,14 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+}
+
+// TODO: put the key somewhere else
+// https://gist.github.com/curioustechizen/9f7d745f9f5f51355bd6
+def getApiKey() {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    return properties.getProperty('DOG_API_KEY')
 }
 
 dependencies {

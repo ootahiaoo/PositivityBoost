@@ -15,7 +15,11 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.getQuote()
+
+        if (savedInstanceState == null) {
+            viewModel.refresh()
+        }
+
         setContent {
             PositivityBoostTheme {
                 MainActivityScreen(viewModel)
@@ -27,9 +31,13 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainActivityScreen(viewModel: MainViewModel) {
     val quote by viewModel.quoteItem.observeAsState("")
+    val dogImage by viewModel.dogItem.observeAsState()
 
     MainScreen(
         quote = quote,
-        onNextQuote = viewModel::getQuote
+        dogImage = dogImage,
+        onNext = {
+            viewModel.refresh()
+        }
     )
 }
