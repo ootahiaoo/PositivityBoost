@@ -22,11 +22,13 @@ import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
 import com.example.android.positivityboost.R
 import com.example.android.positivityboost.model.DogItem
+import com.example.android.positivityboost.model.Result
+import com.example.android.positivityboost.model.Status
 import com.example.android.positivityboost.ui.theme.LightAmber
 import com.example.android.positivityboost.ui.theme.PositivityBoostTheme
 
 @Composable
-fun MainScreen(quote: String? = null, dogImage: DogItem?, onNext: () -> Unit) {
+fun MainScreen(quote: Result<String>?, dogImage: Result<DogItem>?, onNext: () -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -54,8 +56,8 @@ fun MainScreen(quote: String? = null, dogImage: DogItem?, onNext: () -> Unit) {
 @Composable
 fun ContentBody(
     modifier: Modifier = Modifier,
-    quote: String? = null,
-    dogImage: DogItem?,
+    quote: Result<String>?,
+    dogImage: Result<DogItem>?,
     onNext: () -> Unit
 ) {
     LazyColumn(
@@ -65,10 +67,10 @@ fun ContentBody(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (quote != null && dogImage != null) {
+        if ((quote?.status == Status.SUCCESS) && (dogImage?.status == Status.SUCCESS)) {
             item {
                 Text(
-                    text = quote,
+                    text = quote.data ?: "",
                     modifier = Modifier
                         .padding(16.dp),
                     style = MaterialTheme.typography.body1,
@@ -76,7 +78,7 @@ fun ContentBody(
                 )
             }
             item {
-                AnimalImage(dogImage)
+                AnimalImage(dogImage.data!!)
             }
             item {
                 Button(
@@ -146,8 +148,8 @@ private fun AnimalImage(dogImage: DogItem) {
 @Composable
 fun MainScreenPreview() {
     PositivityBoostTheme {
-        val dog = DogItem("abc", "", 300, 300)
-        MainScreen(quote = "You got this", dogImage = dog, onNext = {})
+        val dog = Result.success(DogItem("abc", "", 300, 300))
+        MainScreen(quote = Result.success("You got this"), dogImage = dog, onNext = {})
     }
 }
 
@@ -155,7 +157,7 @@ fun MainScreenPreview() {
 @Composable
 fun DarkMainScreenPreview() {
     PositivityBoostTheme(darkTheme = true) {
-        val dog = DogItem("abc", "", 300, 300)
-        MainScreen(quote = "You got this", dogImage = dog, onNext = {})
+        val dog = Result.success(DogItem("abc", "", 300, 300))
+        MainScreen(quote = Result.success("You got this"), dogImage = dog, onNext = {})
     }
 }

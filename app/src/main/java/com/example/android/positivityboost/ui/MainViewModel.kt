@@ -5,29 +5,43 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.android.positivityboost.model.DogItem
+import com.example.android.positivityboost.model.Result
 import com.example.android.positivityboost.repository.DogRepository
 import com.example.android.positivityboost.repository.QuoteRepository
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import org.koin.core.component.get
 
 class MainViewModel(
     private val quoteRepository: QuoteRepository,
     private val dogRepository: DogRepository
 ) : ViewModel() {
 
-    private var _quoteItem = MediatorLiveData<String>()
-    val quoteItem: LiveData<String> = _quoteItem
+    private var _quoteItem = MediatorLiveData<Result<String>>()
+    val quoteItem: LiveData<Result<String>> = _quoteItem
 
-    fun getQuote() = viewModelScope.launch {
-        _quoteItem.addSource(quoteRepository.getQuote(this), _quoteItem::setValue)
-        _dogItem.addSource(dogRepository.getDog(this), _dogItem::setValue)
+    private var _dogItem = MediatorLiveData<Result<DogItem>>()
+    val dogItem: LiveData<Result<DogItem>> = _dogItem
+
+    fun getQuote() {
+        viewModelScope.launch {
+            quoteRepository.getFlowQuote()
+                .catch {
+                    _quoteItem.value = Result.error()
+                }.collect { result ->
+                    _quoteItem.value = Result.success(result)
+                }
+        }
     }
 
-    private var _dogItem = MediatorLiveData<DogItem>()
-    val dogItem: LiveData<DogItem> = _dogItem
-
-    fun getDog() = viewModelScope.launch {
-        _dogItem.addSource(dogRepository.getDog(this), _dogItem::setValue)
+    fun getDog() {
+        viewModelScope.launch {
+            dogRepository.getRandomDog().catch{
+                _dogItem.value = Result.error()
+            }.collect { result ->
+                _dogItem.value = Result.success(result)
+            }
+        }
     }
 
     fun refresh() {

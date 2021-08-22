@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainActivityScreen(viewModel: MainViewModel) {
-    val quote by viewModel.quoteItem.observeAsState("")
+    val quote by viewModel.quoteItem.observeAsState()
     val dogImage by viewModel.dogItem.observeAsState()
 
     MainScreen(
