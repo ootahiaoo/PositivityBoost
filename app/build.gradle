@@ -7,7 +7,7 @@ android {
     compileSdk 30
 
     defaultConfig {
-        applicationId "com.example.android.positivityboost"
+        applicationId "fr.tahia910.android.positivityboost"
         minSdk 24
         targetSdk 30
         versionCode 1
