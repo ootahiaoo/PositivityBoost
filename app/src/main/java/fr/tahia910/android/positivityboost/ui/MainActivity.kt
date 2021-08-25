@@ -35,7 +35,8 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) { // Android 8 (26)
+        // Must specify a channel to send notifications for Android 8 (26) =<
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationChannel = NotificationChannel(
                 getString(R.string.quote_notification_channel_id),
                 getString(R.string.quote_notification_channel_name),

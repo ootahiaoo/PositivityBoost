@@ -2,7 +2,10 @@
     <string name="app_name">Positivity Boost</string>
     <string name="settings">Settings</string>
     <string name="content_description_image">Animal picture</string>
-    <string name="next">Next</string>
+    <string name="next_action">Gimme more</string>
+    <string name="save_photo_action">Save Photo</string>
+
+    <string name="photo_error_message">Could not get the dog pic :(</string>
 
     <string name="quote_notification_channel_id" translatable="false">fcm_default_channel</string>
     <string name="quote_notification_channel_name" translatable="true">Daily Quote</string>

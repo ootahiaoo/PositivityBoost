@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Theme.PositivityBoost" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="android:statusBarColor">#FFC27C</item>
+        <item name="android:statusBarColor">@color/color_primary_variant</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowBackground">?attr/colorSurface</item>
     </style>

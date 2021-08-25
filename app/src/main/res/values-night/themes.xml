@@ -1,10 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <style name="Theme.PositivityBoost" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="android:statusBarColor">?attr/colorSurface</item>
-        <item name="android:windowLightStatusBar">true</item>
-        <item name="android:windowBackground">?attr/colorSurface</item>
-    </style>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Keep default value for dark theme (instead of custom color for the status bar) -->
+    <style name="Theme.PositivityBoost" parent="Theme.MaterialComponents.DayNight.NoActionBar"/>
 
 </resources>
