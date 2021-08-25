@@ -3,4 +3,9 @@
     <string name="settings">Settings</string>
     <string name="content_description_image">Animal picture</string>
     <string name="next">Next</string>
+
+    <string name="quote_notification_channel_id" translatable="false">fcm_default_channel</string>
+    <string name="quote_notification_channel_name" translatable="true">Daily Quote</string>
+    <string name="quote_notification_channel_description">Daily positive quote to boost
+        your moral!</string>
 </resources>
