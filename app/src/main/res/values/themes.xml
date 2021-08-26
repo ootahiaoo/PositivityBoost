@@ -4,6 +4,7 @@
         <item name="android:statusBarColor">@color/color_primary_variant</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowBackground">?attr/colorSurface</item>
+        <item name="android:colorPrimary">@color/color_primary</item>
     </style>
 
 </resources>
