@@ -66,7 +66,7 @@ fun ContentBody(
             .fillMaxSize()
             .padding(start = 16.dp, end = 16.dp)
     ) {
-        if ((quote?.status == Status.SUCCESS) && (dogImage?.status == Status.SUCCESS)) {
+        if (quote?.status == Status.SUCCESS && dogImage?.status == Status.SUCCESS) {
             LazyColumn(
                 modifier = modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.Center,
@@ -83,13 +83,25 @@ fun ContentBody(
                     )
                 }
                 item {
-                    AnimalImage(dogImage.data!!)
+                    AnimalImage(dogImage.data)
                 }
             }
         }
 
-        val (buttonRow) = createRefs()
-        BottomButtons(onNext = onNext, downloadImage = {},
+        val (buttonRow, errorMessage) = createRefs()
+
+        ErrorMessage(
+            quoteStatus = quote?.status,
+            dogStatus = dogImage?.status,
+            modifier = Modifier
+                .constrainAs(errorMessage) {
+                    top.linkTo(parent.top, margin = 34.dp)
+                }
+                .fillMaxWidth()
+        )
+
+        BottomButton(
+            onNext = onNext,
             modifier = Modifier.constrainAs(buttonRow) {
                 bottom.linkTo(parent.bottom)
             }
@@ -99,38 +111,35 @@ fun ContentBody(
 
 
 @Composable
-private fun AnimalImage(dogImage: DogItem) {
+private fun AnimalImage(dogImage: DogItem?) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentSize()
-            .padding(bottom = 64.dp), // account for the bottom buttons
+            .padding(bottom = 64.dp), // account for the bottom button
         shape = MaterialTheme.shapes.medium
     ) {
         GlideImage(
-            imageModel = dogImage.url,
+            imageModel = dogImage?.url ?: "",
             contentScale = ContentScale.FillWidth,
             modifier = Modifier.fillMaxWidth(),
             contentDescription = stringResource(R.string.content_description_image),
             loading = {
-                Box(
-                    modifier = Modifier
+                LoadingImageAnimation(
+                    Modifier
                         .fillMaxWidth()
-                        .padding(top = 34.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    LoadingImageAnimation()
-                }
+                        .padding(top = 44.dp)
+                )
             },
             failure = {
-                Text(stringResource(id = R.string.photo_error_message))
+                Text(stringResource(id = R.string.error_message_photo))
             }
         )
     }
 }
 
 @Composable
-fun LoadingImageAnimation() {
+fun LoadingImageAnimation(modifier: Modifier = Modifier) {
     val infiniteTransition = rememberInfiniteTransition()
     val alpha by infiniteTransition.animateFloat(
         initialValue = 0f,
@@ -143,15 +152,17 @@ fun LoadingImageAnimation() {
             repeatMode = RepeatMode.Reverse
         )
     )
-    Image(
-        painter = painterResource(id = R.drawable.ic_sun_primary),
-        contentDescription = null,
-        modifier = Modifier.alpha(alpha)
-    )
+    Box(modifier, Alignment.Center) {
+        Image(
+            painter = painterResource(id = R.drawable.ic_sun_primary),
+            contentDescription = null,
+            modifier = Modifier.alpha(alpha)
+        )
+    }
 }
 
 @Composable
-fun BottomButtons(onNext: () -> Unit, downloadImage: () -> Unit, modifier: Modifier = Modifier) {
+fun BottomButton(onNext: () -> Unit, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -159,20 +170,23 @@ fun BottomButtons(onNext: () -> Unit, downloadImage: () -> Unit, modifier: Modif
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         Button(
-            onClick = downloadImage,
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = MaterialTheme.colors.primary
-            )
-        ) {
-            Text(stringResource(id = R.string.save_photo_action))
-        }
-        Button(
             onClick = onNext,
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = MaterialTheme.colors.primary
             )
         ) {
             Text(stringResource(id = R.string.next_action))
+        }
+    }
+}
+
+@Composable
+fun ErrorMessage(quoteStatus: Status?, dogStatus: Status?, modifier: Modifier = Modifier) {
+    Box(modifier, Alignment.Center) {
+        if (quoteStatus == Status.ERROR && dogStatus == Status.ERROR) {
+            Text(stringResource(id = R.string.error_message_both))
+        } else if (quoteStatus == Status.ERROR) {
+            Text(stringResource(id = R.string.error_message_quote))
         }
     }
 }

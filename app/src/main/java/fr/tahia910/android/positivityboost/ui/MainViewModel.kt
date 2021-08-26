@@ -46,6 +46,8 @@ class MainViewModel(
     }
 
     fun refresh() {
+        _quoteItem.value = Result.loading(null)
+        _dogItem.value = Result.loading(null)
         getQuote()
         getDog()
     }

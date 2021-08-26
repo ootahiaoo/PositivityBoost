@@ -2,7 +2,6 @@ package fr.tahia910.android.positivityboost.ui
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
