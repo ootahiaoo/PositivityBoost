@@ -7,9 +7,4 @@
     <string name="error_message_photo">Could not retrieve the pic :(</string>
     <string name="error_message_quote">Could not retrieve the quote :(</string>
     <string name="error_message_both">Could not retrieve both the pic and the quote :(</string>
-
-    <string name="quote_notification_channel_id" translatable="false">fcm_default_channel</string>
-    <string name="quote_notification_channel_name" translatable="true">Daily Quote</string>
-    <string name="quote_notification_channel_description">Daily positive quote to boost
-        your moral!</string>
 </resources>

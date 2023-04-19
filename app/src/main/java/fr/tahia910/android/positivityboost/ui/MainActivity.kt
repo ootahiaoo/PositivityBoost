@@ -30,26 +30,6 @@ class MainActivity : ComponentActivity() {
                 MainActivityScreen(viewModel)
             }
         }
-        createNotificationChannel()
-    }
-
-    private fun createNotificationChannel() {
-        // Must specify a channel to send notifications for Android 8 (26) =<
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val notificationChannel = NotificationChannel(
-                getString(R.string.quote_notification_channel_id),
-                getString(R.string.quote_notification_channel_name),
-                NotificationManager.IMPORTANCE_HIGH
-            ).apply {
-                setShowBadge(false)
-                enableLights(true)
-                lightColor = ContextCompat.getColor(this@MainActivity, R.color.color_primary)
-                enableVibration(true)
-                description = getString(R.string.quote_notification_channel_description)
-            }
-            val notificationManager = getSystemService(NotificationManager::class.java)
-            notificationManager.createNotificationChannel(notificationChannel)
-        }
     }
 }
 

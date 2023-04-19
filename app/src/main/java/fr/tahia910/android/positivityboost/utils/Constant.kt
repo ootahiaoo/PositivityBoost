@@ -5,5 +5,3 @@ const val DOG_RETROFIT_NAME = "dogApiRetrofit"
 
 const val QUOTE_URL = "https://www.affirmations.dev"
 const val DOG_URL = "https://api.thedogapi.com/v1/"
-
-const val NOTIFICATION_ID = 825
