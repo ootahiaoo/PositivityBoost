@@ -4,12 +4,12 @@ plugins {
 }
 
 android {
-    compileSdk 30
+    compileSdk 33
 
     defaultConfig {
         applicationId "fr.tahia910.android.positivityboost"
         minSdk 24
-        targetSdk 30
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -21,7 +21,8 @@ android {
 
     buildTypes {
         applicationVariants.all { variant ->
-            variant.buildConfigField "String", "DOG_API_KEY", getApiKey()
+            variant.buildConfigField "String", "DOG_API_KEY", getApiKey('DOG_API_KEY')
+            variant.buildConfigField "String", "CAT_API_KEY", getApiKey('CAT_API_KEY')
         }
         release {
             minifyEnabled false
@@ -50,10 +51,10 @@ android {
 
 // TODO: put the key somewhere else
 // https://gist.github.com/curioustechizen/9f7d745f9f5f51355bd6
-def getApiKey() {
+def getApiKey(String keyName) {
     Properties properties = new Properties()
     properties.load(project.rootProject.file('local.properties').newDataInputStream())
-    return properties.getProperty('DOG_API_KEY')
+    return properties.getProperty(keyName)
 }
 
 dependencies {

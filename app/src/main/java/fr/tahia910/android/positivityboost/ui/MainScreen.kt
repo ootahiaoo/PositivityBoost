@@ -21,13 +21,13 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.skydoves.landscapist.glide.GlideImage
 import fr.tahia910.android.positivityboost.R
-import fr.tahia910.android.positivityboost.model.DogItem
+import fr.tahia910.android.positivityboost.model.AnimalItem
 import fr.tahia910.android.positivityboost.model.Result
 import fr.tahia910.android.positivityboost.model.Status
 import fr.tahia910.android.positivityboost.ui.theme.PositivityBoostTheme
 
 @Composable
-fun MainScreen(quote: Result<String>?, dogImage: Result<DogItem>?, onNext: () -> Unit) {
+fun MainScreen(quote: Result<String>?, animalImage: Result<AnimalItem>?, onNext: () -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -46,7 +46,7 @@ fun MainScreen(quote: Result<String>?, dogImage: Result<DogItem>?, onNext: () ->
     ) { innerPadding ->
         ContentBody(
             quote = quote,
-            dogImage = dogImage,
+            animalImage = animalImage,
             onNext = onNext,
             modifier = Modifier.padding(innerPadding)
         )
@@ -58,7 +58,7 @@ fun MainScreen(quote: Result<String>?, dogImage: Result<DogItem>?, onNext: () ->
 fun ContentBody(
     modifier: Modifier = Modifier,
     quote: Result<String>?,
-    dogImage: Result<DogItem>?,
+    animalImage: Result<AnimalItem>?,
     onNext: () -> Unit
 ) {
     ConstraintLayout(
@@ -66,7 +66,7 @@ fun ContentBody(
             .fillMaxSize()
             .padding(start = 16.dp, end = 16.dp)
     ) {
-        if (quote?.status == Status.SUCCESS && dogImage?.status == Status.SUCCESS) {
+        if (quote?.status == Status.SUCCESS && animalImage?.status == Status.SUCCESS) {
             LazyColumn(
                 modifier = modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.Center,
@@ -83,7 +83,7 @@ fun ContentBody(
                     )
                 }
                 item {
-                    AnimalImage(dogImage.data)
+                    AnimalImage(animalImage.data)
                 }
             }
         }
@@ -92,7 +92,7 @@ fun ContentBody(
 
         ErrorMessage(
             quoteStatus = quote?.status,
-            dogStatus = dogImage?.status,
+            imageStatus = animalImage?.status,
             modifier = Modifier
                 .constrainAs(errorMessage) {
                     top.linkTo(parent.top, margin = 34.dp)
@@ -111,7 +111,7 @@ fun ContentBody(
 
 
 @Composable
-private fun AnimalImage(dogImage: DogItem?) {
+private fun AnimalImage(animalImage: AnimalItem?) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -120,7 +120,7 @@ private fun AnimalImage(dogImage: DogItem?) {
         shape = MaterialTheme.shapes.medium
     ) {
         GlideImage(
-            imageModel = dogImage?.url ?: "",
+            imageModel = animalImage?.url ?: "",
             contentScale = ContentScale.FillWidth,
             modifier = Modifier.fillMaxWidth(),
             contentDescription = stringResource(R.string.content_description_image),
@@ -181,9 +181,9 @@ fun BottomButton(onNext: () -> Unit, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ErrorMessage(quoteStatus: Status?, dogStatus: Status?, modifier: Modifier = Modifier) {
+fun ErrorMessage(quoteStatus: Status?, imageStatus: Status?, modifier: Modifier = Modifier) {
     Box(modifier, Alignment.Center) {
-        if (quoteStatus == Status.ERROR && dogStatus == Status.ERROR) {
+        if (quoteStatus == Status.ERROR && imageStatus == Status.ERROR) {
             Text(stringResource(id = R.string.error_message_both))
         } else if (quoteStatus == Status.ERROR) {
             Text(stringResource(id = R.string.error_message_quote))
@@ -195,8 +195,8 @@ fun ErrorMessage(quoteStatus: Status?, dogStatus: Status?, modifier: Modifier = 
 @Composable
 fun MainScreenPreview() {
     PositivityBoostTheme {
-        val dog = Result.success(DogItem("abc", "", 300, 300))
-        MainScreen(quote = Result.success("You got this"), dogImage = dog, onNext = {})
+        val animal = Result.success(AnimalItem("abc", "", 300, 300))
+        MainScreen(quote = Result.success("You got this"), animalImage = animal, onNext = {})
     }
 }
 
@@ -204,7 +204,7 @@ fun MainScreenPreview() {
 @Composable
 fun DarkMainScreenPreview() {
     PositivityBoostTheme(darkTheme = true) {
-        val dog = Result.success(DogItem("abc", "", 300, 300))
-        MainScreen(quote = Result.success("You got this"), dogImage = dog, onNext = {})
+        val animal = Result.success(AnimalItem("abc", "", 300, 300))
+        MainScreen(quote = Result.success("You got this"), animalImage = animal, onNext = {})
     }
 }

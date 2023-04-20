@@ -22,7 +22,22 @@ class ApiClient {
 
         val header = Interceptor { chain ->
             val builder = chain.request().newBuilder()
-            builder.header("x-api-key", fr.tahia910.android.positivityboost.BuildConfig.DOG_API_KEY)
+            builder.header("x-api-key", BuildConfig.DOG_API_KEY)
+            chain.proceed(builder.build())
+        }
+        val clientBuilder = OkHttpClient().newBuilder().addInterceptor(header)
+
+        return Retrofit.Builder()
+            .client(clientBuilder.build())
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+    }
+
+    fun createCatRetrofitBuilder(): Retrofit.Builder {
+        val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+
+        val header = Interceptor { chain ->
+            val builder = chain.request().newBuilder()
+            builder.header("x-api-key", BuildConfig.CAT_API_KEY)
             chain.proceed(builder.build())
         }
         val clientBuilder = OkHttpClient().newBuilder().addInterceptor(header)
