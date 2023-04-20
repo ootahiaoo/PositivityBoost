@@ -93,5 +93,5 @@ dependencies {
     // Koin main features for Android (Scope,ViewModel ...)
     implementation "io.insert-koin:koin-android:3.4.0"
     // Koin for Jetpack Compose
-    implementation "io.insert-koin:koin-androidx-compose:3.4.0"
+    implementation "io.insert-koin:koin-androidx-compose:3.4.4"
 }

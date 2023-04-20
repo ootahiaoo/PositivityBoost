@@ -1,9 +1,16 @@
 <resources>
     <string name="app_name">Positivity Boost</string>
-    <string name="settings">Settings</string>
     <string name="next_action">Refresh</string>
+
+    <string name="drawer_home">Home</string>
+    <string name="drawer_settings">Settings</string>
+    <string name="drawer_privacy_policy">Privacy Policy</string>
+    <string name="drawer_terms_of_service">Terms of Service</string>
+    <string name="drawer_licenses">Software Licenses</string>
 
     <string name="error_message_photo">Could not retrieve the pic :(</string>
     <string name="error_message_quote">Could not retrieve the quote :(</string>
     <string name="error_message_both">Could not retrieve both the pic and the quote :(</string>
+
+    <string name="content_description_open_drawer">Menu</string>
 </resources>

@@ -1,19 +1,16 @@
 package fr.tahia910.android.positivityboost.ui
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.*
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.style.TextAlign
@@ -26,24 +23,35 @@ import fr.tahia910.android.positivityboost.R
 import fr.tahia910.android.positivityboost.model.AnimalItem
 import fr.tahia910.android.positivityboost.model.Result
 import fr.tahia910.android.positivityboost.model.Status
+import fr.tahia910.android.positivityboost.ui.component.Drawer
+import fr.tahia910.android.positivityboost.ui.component.LoadingImageAnimation
 import fr.tahia910.android.positivityboost.ui.theme.PositivityBoostTheme
+import kotlinx.coroutines.launch
 
 @Composable
 fun MainScreen(quote: Result<String>?, animalImage: Result<AnimalItem>?, onNext: () -> Unit) {
+    val scaffoldState = rememberScaffoldState()
+    val coroutineScope = rememberCoroutineScope()
+
     Scaffold(
+        scaffoldState = scaffoldState,
         topBar = {
-            TopAppBar(
-                title = { Text(text = stringResource(id = R.string.app_name)) },
-                actions = {
-                    // TODO: implement settings
-//                    IconButton(onClick = { }) {
-//                        Icon(
-//                            imageVector = Icons.Filled.Settings,
-//                            contentDescription = stringResource(R.string.settings)
-//                        )
-//                    }
+            TopAppBar(title = { Text(text = stringResource(id = R.string.app_name)) },
+                navigationIcon = {
+                    IconButton(
+                        onClick = { coroutineScope.launch { scaffoldState.drawerState.open() } }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.Menu, contentDescription = stringResource(
+                                id = R.string.content_description_open_drawer
+                            )
+                        )
+                    }
                 }
             )
+        },
+        drawerContent = {
+            Drawer(onHomeSelected = {}, onSettingsSelected = {})
         }
     ) { innerPadding ->
         ContentBody(
@@ -55,7 +63,6 @@ fun MainScreen(quote: Result<String>?, animalImage: Result<AnimalItem>?, onNext:
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ContentBody(
     modifier: Modifier = Modifier,
@@ -80,7 +87,7 @@ fun ContentBody(
                         modifier = Modifier
                             .padding(start = 16.dp, top = 34.dp, end = 16.dp, bottom = 34.dp)
                             .animateContentSize(),
-                        style = MaterialTheme.typography.h6,
+                        style = MaterialTheme.typography.h1,
                         textAlign = TextAlign.Center
                     )
                 }
@@ -119,7 +126,7 @@ private fun AnimalImage(animalImage: AnimalItem?) {
             .fillMaxWidth()
             .wrapContentSize()
             .padding(bottom = 64.dp) // account for the bottom button
-            .clearAndSetSemantics {  }, // ignore the image
+            .clearAndSetSemantics { }, // ignore the image
         shape = MaterialTheme.shapes.medium
     ) {
         GlideImage(
@@ -138,29 +145,6 @@ private fun AnimalImage(animalImage: AnimalItem?) {
             failure = {
                 Text(stringResource(id = R.string.error_message_photo))
             }
-        )
-    }
-}
-
-@Composable
-fun LoadingImageAnimation(modifier: Modifier = Modifier) {
-    val infiniteTransition = rememberInfiniteTransition()
-    val alpha by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 1f,
-        animationSpec = infiniteRepeatable(
-            animation = keyframes {
-                durationMillis = 1000
-                0.7f at 500
-            },
-            repeatMode = RepeatMode.Reverse
-        )
-    )
-    Box(modifier, Alignment.Center) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_sun_primary),
-            contentDescription = null,
-            modifier = Modifier.alpha(alpha)
         )
     }
 }
@@ -188,9 +172,17 @@ fun BottomButton(onNext: () -> Unit, modifier: Modifier = Modifier) {
 fun ErrorMessage(quoteStatus: Status?, imageStatus: Status?, modifier: Modifier = Modifier) {
     Box(modifier, Alignment.Center) {
         if (quoteStatus == Status.ERROR && imageStatus == Status.ERROR) {
-            Text(stringResource(id = R.string.error_message_both))
+            Text(
+                text = stringResource(id = R.string.error_message_both),
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
+            )
         } else if (quoteStatus == Status.ERROR) {
-            Text(stringResource(id = R.string.error_message_quote))
+            Text(
+                text = stringResource(id = R.string.error_message_quote),
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
+            )
         }
     }
 }
