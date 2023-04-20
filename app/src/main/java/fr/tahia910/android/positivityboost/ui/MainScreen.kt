@@ -15,10 +15,12 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
 import fr.tahia910.android.positivityboost.R
 import fr.tahia910.android.positivityboost.model.AnimalItem
@@ -116,14 +118,16 @@ private fun AnimalImage(animalImage: AnimalItem?) {
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentSize()
-            .padding(bottom = 64.dp), // account for the bottom button
+            .padding(bottom = 64.dp) // account for the bottom button
+            .clearAndSetSemantics {  }, // ignore the image
         shape = MaterialTheme.shapes.medium
     ) {
         GlideImage(
-            imageModel = animalImage?.url ?: "",
-            contentScale = ContentScale.FillWidth,
+            imageModel = { animalImage?.url ?: "" }, // loading a network image using an URL.
+            imageOptions = ImageOptions(
+                contentScale = ContentScale.FillWidth
+            ),
             modifier = Modifier.fillMaxWidth(),
-            contentDescription = stringResource(R.string.content_description_image),
             loading = {
                 LoadingImageAnimation(
                     Modifier
