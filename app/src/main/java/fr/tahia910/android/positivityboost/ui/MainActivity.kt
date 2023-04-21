@@ -33,7 +33,7 @@ fun MainActivityScreen(viewModel: MainViewModel) {
     val quote by viewModel.quoteItem.observeAsState()
     val animalImage by viewModel.animalItem.observeAsState()
 
-    MainScreen(
+    HomeScreen(
         quote = quote,
         animalImage = animalImage,
         onNext = {

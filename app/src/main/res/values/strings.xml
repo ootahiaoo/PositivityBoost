@@ -9,6 +9,15 @@
     <string name="drawer_licenses">Software Licenses</string>
     <string name="drawer_app_version">App version: %s</string>
 
+    <string name="settings_filter_title">Display pictures of:</string>
+    <string name="settings_filter_dogs">Dogs</string>
+    <string name="settings_filter_cats">Cats</string>
+    <string name="settings_filter_mypet">My Pet</string>
+
+    <string name="settings_language_title">Language</string>
+    <string name="settings_language_english">English</string>
+    <string name="settings_language_japanese">日本語</string>
+
     <string name="error_message_photo">Could not retrieve the pic :(</string>
     <string name="error_message_quote">Could not retrieve the quote :(</string>
     <string name="error_message_both">Could not retrieve both the pic and the quote :(</string>

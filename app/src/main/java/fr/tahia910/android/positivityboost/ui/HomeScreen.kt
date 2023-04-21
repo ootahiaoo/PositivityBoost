@@ -29,7 +29,7 @@ import fr.tahia910.android.positivityboost.ui.theme.PositivityBoostTheme
 import kotlinx.coroutines.launch
 
 @Composable
-fun MainScreen(quote: Result<String>?, animalImage: Result<AnimalItem>?, onNext: () -> Unit) {
+fun HomeScreen(quote: Result<String>?, animalImage: Result<AnimalItem>?, onNext: () -> Unit) {
     val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
 
@@ -54,7 +54,7 @@ fun MainScreen(quote: Result<String>?, animalImage: Result<AnimalItem>?, onNext:
             Drawer(onHomeSelected = {}, onSettingsSelected = {})
         }
     ) { innerPadding ->
-        ContentBody(
+        HomeContentBody(
             quote = quote,
             animalImage = animalImage,
             onNext = onNext,
@@ -64,7 +64,7 @@ fun MainScreen(quote: Result<String>?, animalImage: Result<AnimalItem>?, onNext:
 }
 
 @Composable
-fun ContentBody(
+fun HomeContentBody(
     modifier: Modifier = Modifier,
     quote: Result<String>?,
     animalImage: Result<AnimalItem>?,
@@ -189,18 +189,18 @@ fun ErrorMessage(quoteStatus: Status?, imageStatus: Status?, modifier: Modifier 
 
 @Preview
 @Composable
-fun MainScreenPreview() {
+fun HomeScreenPreview() {
     PositivityBoostTheme {
         val animal = Result.success(AnimalItem("abc", "", 300, 300))
-        MainScreen(quote = Result.success("You got this"), animalImage = animal, onNext = {})
+        HomeScreen(quote = Result.success("You got this"), animalImage = animal, onNext = {})
     }
 }
 
 @Preview
 @Composable
-fun DarkMainScreenPreview() {
+fun DarkHomeScreenPreview() {
     PositivityBoostTheme(darkTheme = true) {
         val animal = Result.success(AnimalItem("abc", "", 300, 300))
-        MainScreen(quote = Result.success("You got this"), animalImage = animal, onNext = {})
+        HomeScreen(quote = Result.success("You got this"), animalImage = animal, onNext = {})
     }
 }

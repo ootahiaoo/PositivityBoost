@@ -1,16 +1,12 @@
 package fr.tahia910.android.positivityboost.ui
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import fr.tahia910.android.positivityboost.model.AnimalItem
+import fr.tahia910.android.positivityboost.model.AnimalType
 import fr.tahia910.android.positivityboost.model.Result
 import fr.tahia910.android.positivityboost.repository.AnimalRepository
 import fr.tahia910.android.positivityboost.repository.QuoteRepository
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class MainViewModel(
@@ -76,5 +72,3 @@ class MainViewModel(
         }
     }
 }
-
-enum class AnimalType { DOG, CAT }
