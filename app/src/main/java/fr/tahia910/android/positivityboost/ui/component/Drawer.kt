@@ -1,5 +1,7 @@
 package fr.tahia910.android.positivityboost.ui.component
 
+import android.content.Intent
+import android.net.Uri
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
@@ -11,13 +13,18 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import fr.tahia910.android.positivityboost.R
 import fr.tahia910.android.positivityboost.ui.icon.Icons
 import fr.tahia910.android.positivityboost.ui.theme.LightAmber
+
+private const val PRIVACY_POLICY_URL =
+    "https://dandelion-sandwich-d63.notion.site/Positivity-Boost-Privacy-Policy-2eebaf7fbe2544169f47cba17e15a5d9"
 
 @Composable
 fun Drawer(
@@ -43,10 +50,19 @@ fun Drawer(
         // TODO: MyPet
         // TODO: Fav?
 
+        val context = LocalContext.current
+
         Divider(modifier = Modifier.padding(top = 16.dp, bottom = 24.dp), color = LightAmber)
-        DrawerSubItem(text = R.string.drawer_privacy_policy, onClicked = {})
-        DrawerSubItem(text = R.string.drawer_terms_of_service, onClicked = {})
-        DrawerSubItem(text = R.string.drawer_licenses, onClicked = {})
+        DrawerSubItem(text = R.string.drawer_privacy_policy) {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(PRIVACY_POLICY_URL))
+            context.startActivity(intent)
+        }
+        DrawerSubItem(text = R.string.drawer_terms_of_service) {
+
+        }
+        DrawerSubItem(text = R.string.drawer_licenses) {
+            context.startActivity(Intent(context, OssLicensesMenuActivity::class.java))
+        }
         // TODO: Feedback
 
         // Align the last item to the bottom of the drawer
