@@ -19,10 +19,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
+import fr.tahia910.android.positivityboost.BuildConfig
 import fr.tahia910.android.positivityboost.R
 import fr.tahia910.android.positivityboost.ui.icon.Icons
 import fr.tahia910.android.positivityboost.ui.theme.LightAmber
 
+private const val TERMS_CONDITIONS_URL = "https://www.freeprivacypolicy.com/live/69d1fc81-196d-46b6-a6df-b65e2de8d575"
 private const val PRIVACY_POLICY_URL =
     "https://dandelion-sandwich-d63.notion.site/Positivity-Boost-Privacy-Policy-2eebaf7fbe2544169f47cba17e15a5d9"
 
@@ -53,23 +55,22 @@ fun Drawer(
         val context = LocalContext.current
 
         Divider(modifier = Modifier.padding(top = 16.dp, bottom = 24.dp), color = LightAmber)
+        DrawerSubItem(text = R.string.drawer_terms_of_service) {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(TERMS_CONDITIONS_URL))
+            context.startActivity(intent)
+        }
         DrawerSubItem(text = R.string.drawer_privacy_policy) {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(PRIVACY_POLICY_URL))
             context.startActivity(intent)
         }
-        DrawerSubItem(text = R.string.drawer_terms_of_service) {
-
-        }
         DrawerSubItem(text = R.string.drawer_licenses) {
             context.startActivity(Intent(context, OssLicensesMenuActivity::class.java))
         }
-        // TODO: Feedback
 
         // Align the last item to the bottom of the drawer
         Spacer(modifier = Modifier.weight(1f))
         Text(
-            // TODO: set the real version
-            text = "App version: 1.0.0",
+            text = stringResource(id = R.string.drawer_app_version, BuildConfig.VERSION_NAME),
             modifier = Modifier
                 .requiredHeight(48.dp)
                 .fillMaxWidth()
