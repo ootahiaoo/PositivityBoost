@@ -7,7 +7,7 @@ import fr.tahia910.android.positivityboost.network.DogApi
 import fr.tahia910.android.positivityboost.network.QuoteApi
 import fr.tahia910.android.positivityboost.repository.AnimalRepository
 import fr.tahia910.android.positivityboost.repository.QuoteRepository
-import fr.tahia910.android.positivityboost.ui.MainViewModel
+import fr.tahia910.android.positivityboost.MainViewModel
 import fr.tahia910.android.positivityboost.utils.*
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel

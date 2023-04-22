@@ -7,8 +7,10 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
-import androidx.compose.material.icons.rounded.Menu
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -17,44 +19,12 @@ import androidx.compose.ui.unit.dp
 import fr.tahia910.android.positivityboost.R
 import fr.tahia910.android.positivityboost.model.AnimalType
 import fr.tahia910.android.positivityboost.model.SettingsLanguage
-import fr.tahia910.android.positivityboost.ui.component.Drawer
 import fr.tahia910.android.positivityboost.ui.theme.LightAmber
-import kotlinx.coroutines.launch
 
 @Composable
 fun SettingsScreen() {
-    val scaffoldState = rememberScaffoldState()
-    val coroutineScope = rememberCoroutineScope()
-
-    Scaffold(
-        scaffoldState = scaffoldState,
-        topBar = {
-            TopAppBar(title = { Text(text = stringResource(id = R.string.drawer_settings)) },
-                navigationIcon = {
-                    IconButton(
-                        onClick = { coroutineScope.launch { scaffoldState.drawerState.open() } }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Rounded.Menu, contentDescription = stringResource(
-                                id = R.string.content_description_open_drawer
-                            )
-                        )
-                    }
-                }
-            )
-        },
-        drawerContent = {
-            Drawer(onHomeSelected = {}, onSettingsSelected = {})
-        }
-    ) { innerPadding ->
-        SettingsContentBody(modifier = Modifier.padding(innerPadding))
-    }
-}
-
-@Composable
-fun SettingsContentBody(modifier: Modifier) {
     Column(
-        modifier
+        Modifier
             .fillMaxSize()
             .padding(24.dp)
     ) {

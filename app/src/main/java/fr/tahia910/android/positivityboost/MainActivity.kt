@@ -1,11 +1,9 @@
-package fr.tahia910.android.positivityboost.ui
+package fr.tahia910.android.positivityboost
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
+import fr.tahia910.android.positivityboost.ui.PositivityBoostApp
 import fr.tahia910.android.positivityboost.ui.theme.PositivityBoostTheme
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -22,22 +20,8 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             PositivityBoostTheme {
-                MainActivityScreen(viewModel)
+                PositivityBoostApp(viewModel)
             }
         }
     }
-}
-
-@Composable
-fun MainActivityScreen(viewModel: MainViewModel) {
-    val quote by viewModel.quoteItem.observeAsState()
-    val animalImage by viewModel.animalItem.observeAsState()
-
-    HomeScreen(
-        quote = quote,
-        animalImage = animalImage,
-        onNext = {
-            viewModel.refresh()
-        }
-    )
 }

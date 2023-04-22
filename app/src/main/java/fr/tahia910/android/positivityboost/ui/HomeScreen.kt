@@ -4,10 +4,9 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -19,53 +18,28 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
+import fr.tahia910.android.positivityboost.MainViewModel
 import fr.tahia910.android.positivityboost.R
 import fr.tahia910.android.positivityboost.model.AnimalItem
 import fr.tahia910.android.positivityboost.model.Result
 import fr.tahia910.android.positivityboost.model.Status
-import fr.tahia910.android.positivityboost.ui.component.Drawer
 import fr.tahia910.android.positivityboost.ui.component.LoadingImageAnimation
 import fr.tahia910.android.positivityboost.ui.theme.PositivityBoostTheme
-import kotlinx.coroutines.launch
 
 @Composable
-fun HomeScreen(quote: Result<String>?, animalImage: Result<AnimalItem>?, onNext: () -> Unit) {
-    val scaffoldState = rememberScaffoldState()
-    val coroutineScope = rememberCoroutineScope()
+fun HomeScreen(viewModel: MainViewModel) {
+    val quote by viewModel.quoteItem.observeAsState()
+    val animalImage by viewModel.animalItem.observeAsState()
 
-    Scaffold(
-        scaffoldState = scaffoldState,
-        topBar = {
-            TopAppBar(title = { Text(text = stringResource(id = R.string.app_name)) },
-                navigationIcon = {
-                    IconButton(
-                        onClick = { coroutineScope.launch { scaffoldState.drawerState.open() } }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Rounded.Menu, contentDescription = stringResource(
-                                id = R.string.content_description_open_drawer
-                            )
-                        )
-                    }
-                }
-            )
-        },
-        drawerContent = {
-            Drawer(onHomeSelected = {}, onSettingsSelected = {})
-        }
-    ) { innerPadding ->
-        HomeContentBody(
-            quote = quote,
-            animalImage = animalImage,
-            onNext = onNext,
-            modifier = Modifier.padding(innerPadding)
-        )
-    }
+    HomeContentBody(
+        quote = quote,
+        animalImage = animalImage,
+        onNext = { viewModel.refresh() }
+    )
 }
 
 @Composable
 fun HomeContentBody(
-    modifier: Modifier = Modifier,
     quote: Result<String>?,
     animalImage: Result<AnimalItem>?,
     onNext: () -> Unit
@@ -77,7 +51,7 @@ fun HomeContentBody(
     ) {
         if (quote?.status == Status.SUCCESS && animalImage?.status == Status.SUCCESS) {
             LazyColumn(
-                modifier = modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -192,7 +166,7 @@ fun ErrorMessage(quoteStatus: Status?, imageStatus: Status?, modifier: Modifier 
 fun HomeScreenPreview() {
     PositivityBoostTheme {
         val animal = Result.success(AnimalItem("abc", "", 300, 300))
-        HomeScreen(quote = Result.success("You got this"), animalImage = animal, onNext = {})
+        HomeContentBody(quote = Result.success("You got this"), animalImage = animal, onNext = {})
     }
 }
 
@@ -201,6 +175,6 @@ fun HomeScreenPreview() {
 fun DarkHomeScreenPreview() {
     PositivityBoostTheme(darkTheme = true) {
         val animal = Result.success(AnimalItem("abc", "", 300, 300))
-        HomeScreen(quote = Result.success("You got this"), animalImage = animal, onNext = {})
+        HomeContentBody(quote = Result.success("You got this"), animalImage = animal, onNext = {})
     }
 }

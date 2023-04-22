@@ -1,4 +1,4 @@
-package fr.tahia910.android.positivityboost.ui
+package fr.tahia910.android.positivityboost
 
 import androidx.lifecycle.*
 import fr.tahia910.android.positivityboost.model.AnimalItem
