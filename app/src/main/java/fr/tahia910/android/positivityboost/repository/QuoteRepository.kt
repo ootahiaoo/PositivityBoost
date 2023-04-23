@@ -21,8 +21,8 @@ class QuoteRepository(
     @OptIn(FlowPreview::class)
     val quoteStream = preferredLanguage.flatMapMerge { language ->
         if (language == SettingsLanguage.JAPANESE) {
-            // TODO: add Japanese quotes
-            flow { emit("日本語") }
+            // get hardcoded string
+            flow { emit("") }
         } else {
             getEnglishQuote()
         }

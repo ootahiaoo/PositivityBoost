@@ -4,11 +4,14 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.style.TextAlign
@@ -54,14 +57,7 @@ fun HomeContentBody(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 item {
-                    Text(
-                        text = quoteUiState.quote ?: "",
-                        modifier = Modifier
-                            .padding(start = 16.dp, top = 34.dp, end = 16.dp, bottom = 34.dp)
-                            .animateContentSize(),
-                        style = MaterialTheme.typography.h1,
-                        textAlign = TextAlign.Center
-                    )
+                    Quote(quoteString = quoteUiState.quote)
                 }
                 item {
                     AnimalImage(animalImageUiState.image)
@@ -88,6 +84,24 @@ fun HomeContentBody(
             }
         )
     }
+}
+
+@Composable
+private fun Quote(quoteString: String?) {
+    val quote = if (quoteString.isNullOrBlank()) {
+        val hardCodedQuoteList = stringArrayResource(id = R.array.quotes)
+        hardCodedQuoteList.random()
+    } else {
+        quoteString
+    }
+    Text(
+        text = quote,
+        modifier = Modifier
+            .padding(start = 16.dp, top = 34.dp, end = 16.dp, bottom = 34.dp)
+            .animateContentSize(),
+        style = MaterialTheme.typography.h1,
+        textAlign = TextAlign.Center
+    )
 }
 
 @Composable
@@ -138,7 +152,18 @@ fun BottomButton(onNext: () -> Unit, modifier: Modifier = Modifier) {
                 backgroundColor = MaterialTheme.colors.primary
             )
         ) {
-            Text(stringResource(id = R.string.next_action))
+            Icon(
+                imageVector = Icons.Filled.Refresh,
+                contentDescription = null,
+                // align the icon with the text
+                modifier = Modifier.padding(top = 2.dp)
+            )
+            Text(
+                text = stringResource(id = R.string.next_action),
+                style = MaterialTheme.typography.h1,
+                modifier = Modifier.padding(start = 8.dp),
+                textAlign = TextAlign.Center
+            )
         }
     }
 }

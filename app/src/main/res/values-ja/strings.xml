@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">ポジティビティ ブースト</string>
+    <string name="next_action">更新</string>
+
+    <string name="drawer_home">ホーム</string>
+    <string name="drawer_settings">設定</string>
+    <string name="drawer_privacy_policy">プライバシーポリシー</string>
+    <string name="drawer_terms_of_service">利用規約</string>
+    <string name="drawer_licenses">OSSライセンス</string>
+    <string name="drawer_app_version">アプリバージョン: %s</string>
+
+    <string name="settings_filter_title">表示する動物：</string>
+    <string name="settings_filter_dogs">犬</string>
+    <string name="settings_filter_cats">猫</string>
+    <string name="settings_filter_mypet">マイペット</string>
+
+    <string name="settings_language_title">ポジティブな言葉の言語：</string>
+    <string name="settings_language_english">English</string>
+    <string name="settings_language_japanese">日本語</string>
+
+    <string name="error_message_photo">画像を取得できなかった</string>
+    <string name="error_message_quote">言葉を取得できなかった</string>
+    <string name="error_message_both">画像も言葉も取得できなかった</string>
+
+    <string name="content_description_open_drawer">メニュー</string>
+</resources>

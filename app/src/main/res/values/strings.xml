@@ -14,7 +14,7 @@
     <string name="settings_filter_cats">Cats</string>
     <string name="settings_filter_mypet">My Pet</string>
 
-    <string name="settings_language_title">Language</string>
+    <string name="settings_language_title">Quote language:</string>
     <string name="settings_language_english">English</string>
     <string name="settings_language_japanese">日本語</string>
 
