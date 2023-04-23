@@ -1,13 +1,16 @@
 package fr.tahia910.android.positivityboost.di
 
 import android.app.Application
+import fr.tahia910.android.positivityboost.ui.HomeViewModel
+import fr.tahia910.android.positivityboost.local.DataStorePreferences
 import fr.tahia910.android.positivityboost.network.ApiClient
 import fr.tahia910.android.positivityboost.network.CatApi
 import fr.tahia910.android.positivityboost.network.DogApi
 import fr.tahia910.android.positivityboost.network.QuoteApi
 import fr.tahia910.android.positivityboost.repository.AnimalRepository
 import fr.tahia910.android.positivityboost.repository.QuoteRepository
-import fr.tahia910.android.positivityboost.MainViewModel
+import fr.tahia910.android.positivityboost.repository.SettingsRepository
+import fr.tahia910.android.positivityboost.ui.SettingsViewModel
 import fr.tahia910.android.positivityboost.utils.*
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -28,6 +31,7 @@ object DIModule {
                     apiClientModule,
                     apiModule,
                     viewModelModule,
+                    dataStore,
                     repositoryModule
                 )
             )
@@ -54,11 +58,17 @@ object DIModule {
     }
 
     private val repositoryModule: Module = module {
-        single { QuoteRepository(get()) }
-        single { AnimalRepository(get(), get()) }
+        single { QuoteRepository(get(), get()) }
+        single { AnimalRepository(get(), get(), get()) }
+        single { SettingsRepository(get()) }
+    }
+
+    private val dataStore: Module = module {
+        single { DataStorePreferences(get()) }
     }
 
     private val viewModelModule: Module = module {
-        viewModel { MainViewModel(get(), get()) }
+        viewModel { HomeViewModel(get(), get()) }
+        viewModel { SettingsViewModel(get()) }
     }
 }

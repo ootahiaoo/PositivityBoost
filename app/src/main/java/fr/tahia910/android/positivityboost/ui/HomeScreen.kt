@@ -6,7 +6,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -16,32 +15,31 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.glide.GlideImage
-import fr.tahia910.android.positivityboost.MainViewModel
 import fr.tahia910.android.positivityboost.R
 import fr.tahia910.android.positivityboost.model.AnimalItem
-import fr.tahia910.android.positivityboost.model.Result
-import fr.tahia910.android.positivityboost.model.Status
-import fr.tahia910.android.positivityboost.ui.component.LoadingImageAnimation
+import fr.tahia910.android.positivityboost.ui.component.LoadingAnimation
 import fr.tahia910.android.positivityboost.ui.theme.PositivityBoostTheme
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun HomeScreen(viewModel: MainViewModel) {
-    val quote by viewModel.quoteItem.observeAsState()
-    val animalImage by viewModel.animalItem.observeAsState()
+fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
+    val homeUiState by viewModel.quoteUiState.collectAsStateWithLifecycle()
+    val animalImageUiState by viewModel.animalImageUiState.collectAsStateWithLifecycle()
 
     HomeContentBody(
-        quote = quote,
-        animalImage = animalImage,
+        quoteUiState = homeUiState,
+        animalImageUiState = animalImageUiState,
         onNext = { viewModel.refresh() }
     )
 }
 
 @Composable
 fun HomeContentBody(
-    quote: Result<String>?,
-    animalImage: Result<AnimalItem>?,
+    quoteUiState: QuoteUiState,
+    animalImageUiState: AnimalImageUiState,
     onNext: () -> Unit
 ) {
     ConstraintLayout(
@@ -49,7 +47,7 @@ fun HomeContentBody(
             .fillMaxSize()
             .padding(start = 16.dp, end = 16.dp)
     ) {
-        if (quote?.status == Status.SUCCESS && animalImage?.status == Status.SUCCESS) {
+        if (quoteUiState is QuoteUiState.Success && animalImageUiState is AnimalImageUiState.Success) {
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.Center,
@@ -57,7 +55,7 @@ fun HomeContentBody(
             ) {
                 item {
                     Text(
-                        text = quote.data ?: "",
+                        text = quoteUiState.quote ?: "",
                         modifier = Modifier
                             .padding(start = 16.dp, top = 34.dp, end = 16.dp, bottom = 34.dp)
                             .animateContentSize(),
@@ -66,7 +64,7 @@ fun HomeContentBody(
                     )
                 }
                 item {
-                    AnimalImage(animalImage.data)
+                    AnimalImage(animalImageUiState.image)
                 }
             }
         }
@@ -74,8 +72,8 @@ fun HomeContentBody(
         val (buttonRow, errorMessage) = createRefs()
 
         ErrorMessage(
-            quoteStatus = quote?.status,
-            imageStatus = animalImage?.status,
+            isQuoteError = quoteUiState == QuoteUiState.Error,
+            isAnimalImageError = animalImageUiState == AnimalImageUiState.Error,
             modifier = Modifier
                 .constrainAs(errorMessage) {
                     top.linkTo(parent.top, margin = 34.dp)
@@ -91,7 +89,6 @@ fun HomeContentBody(
         )
     }
 }
-
 
 @Composable
 private fun AnimalImage(animalImage: AnimalItem?) {
@@ -110,14 +107,18 @@ private fun AnimalImage(animalImage: AnimalItem?) {
             ),
             modifier = Modifier.fillMaxWidth(),
             loading = {
-                LoadingImageAnimation(
+                LoadingAnimation(
                     Modifier
                         .fillMaxWidth()
                         .padding(top = 44.dp)
                 )
             },
             failure = {
-                Text(stringResource(id = R.string.error_message_photo))
+                Text(
+                    text = stringResource(id = R.string.error_message_photo),
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center
+                )
             }
         )
     }
@@ -143,15 +144,19 @@ fun BottomButton(onNext: () -> Unit, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ErrorMessage(quoteStatus: Status?, imageStatus: Status?, modifier: Modifier = Modifier) {
-    Box(modifier, Alignment.Center) {
-        if (quoteStatus == Status.ERROR && imageStatus == Status.ERROR) {
+fun ErrorMessage(
+    isQuoteError: Boolean,
+    isAnimalImageError: Boolean,
+    modifier: Modifier = Modifier
+) {
+    Box(modifier.fillMaxWidth(), Alignment.Center) {
+        if (isQuoteError && isAnimalImageError) {
             Text(
                 text = stringResource(id = R.string.error_message_both),
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
             )
-        } else if (quoteStatus == Status.ERROR) {
+        } else if (isQuoteError) {
             Text(
                 text = stringResource(id = R.string.error_message_quote),
                 modifier = Modifier.fillMaxWidth(),
@@ -165,8 +170,14 @@ fun ErrorMessage(quoteStatus: Status?, imageStatus: Status?, modifier: Modifier 
 @Composable
 fun HomeScreenPreview() {
     PositivityBoostTheme {
-        val animal = Result.success(AnimalItem("abc", "", 300, 300))
-        HomeContentBody(quote = Result.success("You got this"), animalImage = animal, onNext = {})
+        val quoteUiState = QuoteUiState.Success("You got this")
+        val animalItem = AnimalItem("abc", "", 300, 300)
+        val animalImageUiState = AnimalImageUiState.Success(animalItem)
+        HomeContentBody(
+            quoteUiState = quoteUiState,
+            animalImageUiState = animalImageUiState,
+            onNext = {}
+        )
     }
 }
 
@@ -174,7 +185,13 @@ fun HomeScreenPreview() {
 @Composable
 fun DarkHomeScreenPreview() {
     PositivityBoostTheme(darkTheme = true) {
-        val animal = Result.success(AnimalItem("abc", "", 300, 300))
-        HomeContentBody(quote = Result.success("You got this"), animalImage = animal, onNext = {})
+        val quoteUiState = QuoteUiState.Success(quote = "You got this")
+        val animalItem = AnimalItem("abc", "", 300, 300)
+        val animalImageUiState = AnimalImageUiState.Success(animalItem)
+        HomeContentBody(
+            quoteUiState = quoteUiState,
+            animalImageUiState = animalImageUiState,
+            onNext = {}
+        )
     }
 }

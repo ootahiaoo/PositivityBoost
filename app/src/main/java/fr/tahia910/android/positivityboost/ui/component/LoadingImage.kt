@@ -12,7 +12,7 @@ import androidx.compose.ui.res.painterResource
 import fr.tahia910.android.positivityboost.R
 
 @Composable
-fun LoadingImageAnimation(modifier: Modifier = Modifier) {
+fun LoadingAnimation(modifier: Modifier = Modifier) {
     val infiniteTransition = rememberInfiniteTransition()
     val alpha by infiniteTransition.animateFloat(
         initialValue = 0f,

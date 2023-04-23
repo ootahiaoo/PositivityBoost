@@ -7,7 +7,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import fr.tahia910.android.positivityboost.R
 import fr.tahia910.android.positivityboost.ui.HomeScreen
-import fr.tahia910.android.positivityboost.MainViewModel
 import fr.tahia910.android.positivityboost.ui.SettingsScreen
 
 enum class Destination(val route: String, @StringRes val screenTitle: Int) {
@@ -18,15 +17,14 @@ enum class Destination(val route: String, @StringRes val screenTitle: Int) {
 @Composable
 fun PositivityBoostNavHost(
     navController: NavHostController,
-    startDestination: String = Destination.HOME.route,
-    mainViewModel: MainViewModel
+    startDestination: String = Destination.HOME.route
 ) {
     NavHost(
         navController = navController,
         startDestination = startDestination
     ) {
         composable(route = Destination.HOME.route) {
-            HomeScreen(viewModel = mainViewModel)
+            HomeScreen()
         }
 
         composable(route = Destination.SETTINGS.route) {

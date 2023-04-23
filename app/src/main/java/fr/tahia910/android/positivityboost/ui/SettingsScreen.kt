@@ -8,63 +8,65 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import fr.tahia910.android.positivityboost.R
 import fr.tahia910.android.positivityboost.model.AnimalType
 import fr.tahia910.android.positivityboost.model.SettingsLanguage
+import fr.tahia910.android.positivityboost.ui.component.LoadingAnimation
 import fr.tahia910.android.positivityboost.ui.theme.LightAmber
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun SettingsScreen() {
-    Column(
-        Modifier
-            .fillMaxSize()
-            .padding(24.dp)
-    ) {
+fun SettingsScreen(viewModel: SettingsViewModel = koinViewModel()) {
+    val settingsUiState by viewModel.settingsUiState.collectAsStateWithLifecycle()
 
-        // TODO: save to pref
-        // Animal image filter option
-        val animalOptionList = AnimalType.values()
-        val selectedAnimalOptionList: MutableState<List<AnimalType>> = remember {
-            // TODO: change default
-            mutableStateOf(listOf(AnimalType.DOG))
+    when (settingsUiState) {
+        SettingsUiState.Loading -> {
+            LoadingAnimation(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 44.dp)
+            )
         }
-        OptionGroupTitle(title = stringResource(id = R.string.settings_filter_title))
-        AnimalImageFilterOptionGroup(
-            animalOptionList = animalOptionList,
-            selectedOptionList = selectedAnimalOptionList.value,
-            onOptionSelected = {
-                val previousList = selectedAnimalOptionList.value.toMutableList()
 
-                if (previousList.contains(it)) previousList.remove(it) else previousList.add(it)
-                selectedAnimalOptionList.value = previousList
+        is SettingsUiState.Success -> {
+            val settings = (settingsUiState as SettingsUiState.Success).settings
+
+            Column(
+                Modifier
+                    .fillMaxSize()
+                    .padding(24.dp)
+            ) {
+                // Animal image filter option
+                OptionGroupTitle(title = stringResource(id = R.string.settings_filter_title))
+                AnimalImageFilterOptionGroup(
+                    selectedOptionList = settings.animalImageFilters,
+                    onOptionSelected = {
+                        val updatedList = settings.animalImageFilters.toMutableList()
+                        if (updatedList.contains(it)) updatedList.remove(it) else updatedList.add(it)
+                        viewModel.updateAnimalImageFilters(updatedList)
+                    }
+                )
+
+                Divider(
+                    modifier = Modifier.padding(top = 32.dp, bottom = 16.dp),
+                    color = LightAmber
+                )
+
+                // Language option
+                OptionGroupTitle(title = stringResource(id = R.string.settings_language_title))
+                LanguageOptionGroup(
+                    selectedOption = settings.preferredLanguage,
+                    onOptionSelected = { viewModel.updatePreferredLanguage(it) }
+                )
             }
-        )
-
-        Divider(
-            modifier = Modifier.padding(top = 32.dp, bottom = 16.dp),
-            color = LightAmber
-        )
-
-        // TODO: save to pref
-        // Language option
-        val languageOptionList = SettingsLanguage.values()
-        val (selectedLanguageOption, onLanguageOptionSelected) = remember {
-            mutableStateOf(languageOptionList[0])
         }
-        OptionGroupTitle(title = stringResource(id = R.string.settings_language_title))
-        LanguageOptionGroup(
-            languageOptionList = languageOptionList,
-            selectedOption = selectedLanguageOption,
-            onOptionSelected = onLanguageOptionSelected
-        )
     }
 }
 
@@ -82,7 +84,7 @@ fun OptionGroupTitle(title: String) {
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun AnimalImageFilterOptionGroup(
-    animalOptionList: Array<AnimalType>,
+    animalOptionList: Array<AnimalType> = AnimalType.values(),
     selectedOptionList: List<AnimalType>,
     onOptionSelected: (AnimalType) -> Unit,
 ) {
@@ -129,7 +131,7 @@ fun AnimalImageFilterOptionGroup(
 
 @Composable
 fun LanguageOptionGroup(
-    languageOptionList: Array<SettingsLanguage>,
+    languageOptionList: Array<SettingsLanguage> = SettingsLanguage.values(),
     selectedOption: SettingsLanguage,
     onOptionSelected: (SettingsLanguage) -> Unit
 ) {
